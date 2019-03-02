@@ -28,7 +28,7 @@ class RegistrationForm extends React.Component {
         <h2 class="ui dividing header">Prescriptions</h2>
         <Form.Input
           fluid
-          label="med_name"
+          label="Medication Name"
           placeholder="Medication Name"
           style={{ width: "65%" }}
         />
