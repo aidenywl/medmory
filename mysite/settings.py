@@ -25,13 +25,13 @@ SECRET_KEY = '9n*rfb*^m=5dl*zdgn-lb^nqjbw9bl@0-5th-v!3-j+ks7#*(o'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['.ngrok.io','35.184.73.255']
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
 
 INSTALLED_APPS = [
-    'sms.apps.SmsConfig',    
+    'sms.apps.SmsConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

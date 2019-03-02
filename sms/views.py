@@ -21,7 +21,7 @@ def register_user(request):
 
 @csrf_exempt
 def sms_response(request):
-        # start our TwiML response
+    # start our TwiML response
     resp = MessagingResponse()
 
     # add a text message
