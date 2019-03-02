@@ -30,7 +30,7 @@ def sms_response(request):
         .create(
             body="Join Earth's mightiest heroes. Like Kevin Bacon.",
             from_='+12017545326',
-            to='+8326204829'
+            to='+18326204829'
         )
     print(message.sid)
     return HttpResponse(str(message.sid))
