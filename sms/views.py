@@ -23,8 +23,8 @@ def register_user(request):
 
 @csrf_exempt
 def sms_response(request):
-    account_sid = 'AC7dca0086bf0fb3233c8a919a2deebd2e'
-    auth_token = '8d5263c2694afda8113c0e7901227dba'
+    account_sid = 'AC60be041a5540d6b9083aea07443519d9'
+    auth_token = 'ae409c66fcfbfd4c5f6a726b84bb64bf'
     client = Client(account_sid, auth_token)
     message = client.messages \
         .create(
@@ -32,5 +32,6 @@ def sms_response(request):
             from_='+12017545326',
             to='+18326204829'
         )
-    print(message.sid)
-    return HttpResponse(str(message.sid))
+    print(request)
+    print(message)
+    return HttpResponse(str(message))
