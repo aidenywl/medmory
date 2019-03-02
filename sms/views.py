@@ -2,6 +2,8 @@ from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponseServerError, HttpResponse
 from twilio.twiml.messaging_response import MessagingResponse
+from twilio.rest import Client
+
 # Create your views here.
 
 import json
@@ -21,10 +23,14 @@ def register_user(request):
 
 @csrf_exempt
 def sms_response(request):
-    # start our TwiML response
-    resp = MessagingResponse()
-
-    # add a text message
-    msg = resp.message("Check out this sweet owl!")
-
-    return HttpResponse(str(resp))
+    account_sid = 'AC7dca0086bf0fb3233c8a919a2deebd2e'
+    auth_token = '8d5263c2694afda8113c0e7901227dba'
+    client = Client(account_sid, auth_token)
+    message = client.messages \
+        .create(
+            body="Join Earth's mightiest heroes. Like Kevin Bacon.",
+            from_='+12017545326',
+            to='+18326204829'
+        )
+    print(message.sid)
+    return HttpResponse(str(message.sid))
