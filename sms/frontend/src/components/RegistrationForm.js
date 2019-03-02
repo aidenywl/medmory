@@ -83,9 +83,9 @@ class RegistrationForm extends React.Component {
       medication1,
       medication2
     } = this.state;
-
+    console.log("calling axios");
     axios
-      .post("/register_user", {
+      .post("/api/register_user", {
         first_name,
         last_name,
         phone_number,
@@ -110,14 +110,15 @@ class RegistrationForm extends React.Component {
 
     return (
       <Form style={{ padding: "35px" }}>
-        <h2 class="ui horizontal divider header">
-          <i class="fas fa-user-alt" style={{ paddingRight: "5px" }} />
+        <h2 className="ui horizontal divider header">
+          <i className="fas fa-user-alt" style={{ paddingRight: "5px" }} />
           Patient Information
         </h2>
         <Form.Group widths="equal">
           <Form.Input
             fluid
             label="First Name"
+            name="first_name"
             value={first_name}
             onChange={this.onChange}
             placeholder="First name"
@@ -125,6 +126,7 @@ class RegistrationForm extends React.Component {
           <Form.Input
             fluid
             label="Last Name"
+            name="last_name"
             value={last_name}
             onChange={this.onChange}
             placeholder="Last name"
@@ -133,16 +135,17 @@ class RegistrationForm extends React.Component {
         <Form.Input
           fluid
           label="Phone Number"
+          name="phone_number"
           value={phone_number}
           onChange={this.onChange}
           placeholder="Phone Number"
           style={{ width: "40%" }}
         />
-        <h2 class="ui horizontal divider header">
-          <i class="fas fa-pills" style={{ paddingRight: "5px" }} />
+        <h2 className="ui horizontal divider header">
+          <i className="fas fa-pills" style={{ paddingRight: "5px" }} />
           Prescriptions
         </h2>
-        <Form.Input
+        {/* <Form.Input
           fluid
           label="Medication 1"
           value={medication0.med_name}
@@ -239,7 +242,7 @@ class RegistrationForm extends React.Component {
         </Form.Group>
         <Form.Input
           fluid
-          label="Medication 1"
+          label="Medication 3"
           value={medication2.med_name}
           name="med_name"
           onChange={this.onMedication2Change}
@@ -283,8 +286,8 @@ class RegistrationForm extends React.Component {
             options={periodUnitOptions}
             placeholder="Time Period"
           />
-        </Form.Group>
-        <Form.Button onSubmit={this.handleSubmit}>Submit</Form.Button>
+        </Form.Group> */}
+        <Form.Button onClick={this.handleSubmit}>Submit</Form.Button>
       </Form>
     );
   }
