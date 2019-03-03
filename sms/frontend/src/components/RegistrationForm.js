@@ -17,29 +17,29 @@ class RegistrationForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      first_name: "",
-      last_name: "",
-      phone_number: "",
+      first_name: "Fiona",
+      last_name: "Tang",
+      phone_number: "+14159198310",
       medication0: {
-        med_name: "",
-        dosage: "",
+        med_name: "advil",
+        dosage: "200",
         dosage_unit: "mg",
-        frequency: "",
+        frequency: "2",
         time_period: "weekly"
       },
       medication1: {
-        med_name: "",
-        dosage: "",
-        dosageUnit: "mg",
-        frequency: "",
-        time_period: "weekly"
+        med_name: "paracetamol",
+        dosage: "500",
+        dosageUnit: "ml",
+        frequency: "1",
+        time_period: "daily"
       },
       medication2: {
-        med_name: "",
-        dosage: "",
+        med_name: "Acetaminophen",
+        dosage: "500",
         dosageUnit: "mg",
-        frequency: "",
-        time_period: "weekly"
+        frequency: "2",
+        time_period: "bi-weekly"
       }
     };
   }
@@ -145,7 +145,7 @@ class RegistrationForm extends React.Component {
           <i className="fas fa-pills" style={{ paddingRight: "5px" }} />
           Prescriptions
         </h2>
-        {/* <Form.Input
+        <Form.Input
           fluid
           label="Medication 1"
           value={medication0.med_name}
@@ -286,7 +286,7 @@ class RegistrationForm extends React.Component {
             options={periodUnitOptions}
             placeholder="Time Period"
           />
-        </Form.Group> */}
+        </Form.Group>
         <Form.Button onClick={this.handleSubmit}>Submit</Form.Button>
       </Form>
     );
