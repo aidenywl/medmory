@@ -9,6 +9,8 @@ import datetime
 
 import json
 
+from .forms import PatientForm, MedicationForm
+
 
 @csrf_exempt
 def register_user(request):
@@ -16,7 +18,20 @@ def register_user(request):
     if request.method != 'POST':
         return HttpResponseServerError('wrong method used.')
     request_data = json.loads(request.body)
-    print(request_data)
+
+    patient_data = {
+        'first_name': request_data['first_name'],
+        'last_name': request_data['last_name'],
+        'phone_number': request_data['phone_number']
+    }
+
+    patientForm = PatientForm(patient_data)
+    # If the form is not valid, reject the request.
+    if not patientForm.is_valid():
+        return HttpResponseServerError("Patient data is not valid.")
+
+    patientForm.save()  # save to the database
+
     return HttpResponse("ok")
     # save the data into the database
 
@@ -37,7 +52,6 @@ def sms_register(request, number):
         )
     print(validation_request.friendly_name)
     return HttpResponse(str(validation_request.friendly_name))
-
 
 def test_scheduling(request, message):
     for x in range(5):
