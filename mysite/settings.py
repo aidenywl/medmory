@@ -15,7 +15,7 @@ from huey import RedisHuey
 from redis import ConnectionPool
 
 pool = ConnectionPool(host='localhost', port=6379, max_connections=20)
-HUEY = RedisHuey('random', connection_pool=pool)
+HUEY = RedisHuey('sms', connection_pool=pool)
 
 ACCOUNT_SID = 'AC50a4d5175f472777fbdf7769ed686025'
 AUTH_TOKEN = '12b3f169567a82cf006fa7d153b9abdf'
