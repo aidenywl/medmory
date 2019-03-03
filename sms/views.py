@@ -56,7 +56,7 @@ def sms_register(request, number):
 def test_scheduling(request, message):
     for x in range(5):
         now = datetime.datetime.now()
-        # remind every 5 mins
+        # remind every 10 seconds
         scheduled_medication_time = now + (datetime.timedelta(seconds=10) * x)
         # schedule task send_reminder
         test_task.schedule(args=(message,),
@@ -66,14 +66,15 @@ def test_scheduling(request, message):
 
 
 def _create_reminders(patient, medication):
-    for x in range(5):
-        now = datetime.datetime.now()
-        # remind every 5 mins
-        scheduled_medication_time = now + (datetime.timedelta(seconds=10) * x)
-        message = medication['dosage'] + medication['unit']
-        # schedule task send_reminder
-        send_reminder.schedule(args=(patient['phone_number'], message,),
-                               eta=scheduled_medication_time)
+	# remind in 5 seconds
+	now = datetime.datetime.now()
+	scheduled_time = now + (datetime.timedelta(seconds=5))
+	message = medication['dosage'] + medication['unit']
+	# create reminder
+	reminder = 0
+	# schedule task send_reminder
+	send_reminder.schedule(args=(patient, reminder, message,),
+                               eta=scheduled_time)
     return
 
 

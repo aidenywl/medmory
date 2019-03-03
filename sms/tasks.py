@@ -19,25 +19,24 @@ def test_task(message):
 
 
 @task()
-def send_reminder(patient, message):
-    print('send reminder: ' + str(datetime.datetime.utcnow()) +
-          '; ' + patient['phone_number'] + '; ' + message)
-    send_message(patient['phone_number'], message)
-	# schedule check
-    check_reminder.schedule(args=(patient))
-    return
+def send_reminder(patient, reminder, message):
+	# print('send reminder: ' + str(datetime.datetime.now()) + '; ' + patient['phone_number'] + '; ' + message)
+	send_message(patient['phone_number'], message)
+	# schedule check in 5 min
+	now = datetime.datetime.now()
+	scheduled_time = now + (datetime.timedelta(seconds=300))
+	check_reminder.schedule(args=(patient, reminder, message,), eta=scheduled_time))
+	return
 
 
 @db_task()
-def check_reminder(phone_number, message):
+def check_reminder(patient, reminder, message):
     # print('check reminder: ' + str(datetime.datetime.utcnow()) +
     #       '; ' + patient['phone_number'] + '; ' + message)
-    # send_message(phone_number, message)
+	#  check sql for completion
     # completed = False
     # if not completed:
-    #     send_reminder()
-    # else:
-    #         # complete
+    #     send_reminder(patient, reminder, message,)
     return
 
 # @periodic_task(crontab(minute='*/5'))
