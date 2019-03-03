@@ -180,7 +180,7 @@ def sms_response(request):
 	message = request_data['Body']
 	recipient_number = request_data['From']
 
-	patient = Patient.objects.filter(phone_number=recipient_number).all()
+	patient = list(Patient.objects.filter(phone_number=recipient_number))[0]
 	print(patient)
 	print(patient.id)
 	# get all reminders linked to patient.
