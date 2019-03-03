@@ -3,6 +3,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponseServerError, HttpResponse
 from twilio.twiml.messaging_response import MessagingResponse
 from twilio.rest import Client
+from django.conf import settings
 
 # Create your views here.
 
@@ -26,30 +27,24 @@ def register_user(request):
 
 @csrf_exempt
 def sms_register(request, number):
-        # if request.method != 'GET':
-        # 	number = request.GET.get('number', '')
-    account_sid = 'AC60be041a5540d6b9083aea07443519d9'
-    auth_token = 'ae409c66fcfbfd4c5f6a726b84bb64bf'
-    client = Client(account_sid, auth_token)
-    validation_request = client.validation_requests \
+	client = Client(settings.ACCOUNT_SID, settings.AUTH_TOKEN)
+	validation_request = client.validation_requests \
         .create(
             friendly_name=number,
             phone_number='+1' + number
         )
-    print(validation_request.friendly_name)
-    # return HttpResponse(str(message))
+	print(validation_request.friendly_name)
+	return HttpResponse(str(validation_request.friendly_name))
 
 
 @csrf_exempt
 def sms_response(request):
     print(request)
-    account_sid = 'AC60be041a5540d6b9083aea07443519d9'
-    auth_token = 'ae409c66fcfbfd4c5f6a726b84bb64bf'
-    client = Client(account_sid, auth_token)
+    client = Client(settings.ACCOUNT_SID, settings.AUTH_TOKEN)
     message = client.messages \
         .create(
             body="Join Earth's mightiest heroes. Like Kevin Bacon.",
-            from_='+12017545326',
+            from_=settings.ACCOUNT_NUMBER,
             to='+18326204829'
         )
     print(message)

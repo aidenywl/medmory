@@ -12,6 +12,10 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 
 import os
 
+ACCOUNT_SID = 'AC60be041a5540d6b9083aea07443519d9'
+AUTH_TOKEN = 'ae409c66fcfbfd4c5f6a726b84bb64bf'
+ACCOUNT_NUMBER='+12017545326'
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
