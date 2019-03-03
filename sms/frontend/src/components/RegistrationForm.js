@@ -20,78 +20,126 @@ class RegistrationForm extends React.Component {
       first_name: "Fiona",
       last_name: "Tang",
       phone_number: "+14159198310",
-      medication0: {
-        med_name: "advil",
-        dosage: "200",
-        dosage_unit: "mg",
-        frequency: "2",
-        time_period: "weekly"
-      },
-      medication1: {
-        med_name: "paracetamol",
-        dosage: "500",
-        dosageUnit: "ml",
-        frequency: "1",
-        time_period: "daily"
-      },
-      medication2: {
-        med_name: "Acetaminophen",
-        dosage: "500",
-        dosageUnit: "mg",
-        frequency: "2",
-        time_period: "bi-weekly"
-      }
+      medications: [
+        {
+          med_name: "advil",
+          dosage: "200",
+          dosage_unit: "mg",
+          frequency: "2",
+          time_period: "weekly"
+        }
+      ]
     };
+  }
+
+  handleAddClick() {
+    this.setState(prevState => ({
+      medications: [
+        ...prevState.medications,
+        {
+          med_name: "",
+          dosage: "",
+          dosage_unit: "",
+          frequency: "",
+          time_period: "weekly"
+        }
+      ]
+    }));
+  }
+
+  handleChange(index, e) {
+    const { name, value } = e.target;
+    let medications = [...this.state.medications];
+    medications[index] = { ...medications[index], [name]: value };
+    this.setState({ medications });
+  }
+
+  handleRemoveClick(index) {
+    let medications = [...this.state.medications];
+    medications.splice(index, 1);
+    this.setState({ medications });
+  }
+
+  createMedicationFormPortion() {
+    return this.state.medications.map((med, index) => (
+      <div key={index}>
+        <Form.Input
+          fluid
+          label="Medication"
+          value={med.med_name}
+          name="med_name"
+          onChange={this.handleChange.bind(this, index)}
+          placeholder="Medication Name"
+          style={{ width: "65%" }}
+        />
+        <Form.Group widths="equal" style={{ width: "50%" }}>
+          <Form.Input
+            fluid
+            label="Dosage"
+            value={med.dosage}
+            name="dosage"
+            onChange={this.handleChange.bind(this, index)}
+            placeholder="Dosage"
+          />
+          <Form.Select
+            fluid
+            label="Unit"
+            value={med.dosageUnit}
+            name="dosage_unit"
+            onChange={this.handleChange.bind(this, index)}
+            options={dosageUnitOptions}
+            placeholder="Unit"
+          />
+        </Form.Group>
+        <Form.Group widths="equal" style={{ width: "50%" }}>
+          <Form.Input
+            fluid
+            label="Frequency"
+            value={med.frequency}
+            name="frequency"
+            onChange={this.handleChange.bind(this, index)}
+            placeholder="Frequency"
+          />
+          <Form.Select
+            fluid
+            label="Time Period"
+            value={med.time_period}
+            name="time_period"
+            onChange={this.handleChange.bind(this, index)}
+            options={periodUnitOptions}
+            placeholder="Time Period"
+          />
+        </Form.Group>
+        {index >= 1 && (
+          <Form.Button
+            className="override"
+            value="remove"
+            onClick={this.handleRemoveClick.bind(this, index)}
+            style={{ backgroundColor: "lightcoral" }}
+          >
+            Remove
+          </Form.Button>
+        )}
+        <br />
+      </div>
+    ));
   }
 
   onChange = e => {
     this.setState({ [e.target.name]: e.target.value });
   };
 
-  onMedication0Change = e => {
-    this.setState({
-      medication0: {
-        [e.target.name]: e.target.value
-      }
-    });
-  };
-
-  onMedication1Change = e => {
-    this.setState({
-      medication1: {
-        [e.target.name]: e.target.value
-      }
-    });
-  };
-
-  onMedication2Change = e => {
-    this.setState({
-      medication2: {
-        [e.target.name]: e.target.value
-      }
-    });
-  };
-
   handleSubmit = e => {
     e.preventDefault();
 
-    const {
-      first_name,
-      last_name,
-      phone_number,
-      medication0,
-      medication1,
-      medication2
-    } = this.state;
+    const { first_name, last_name, phone_number, medications } = this.state;
     console.log("calling axios");
     axios
       .post("/api/register_user", {
         first_name,
         last_name,
         phone_number,
-        medication0,
-        medication1,
-        medication2
+        medications
       })
       .then(result => {
         alert(result.data.token);
@@ -99,14 +147,7 @@ class RegistrationForm extends React.Component {
   };
 
   render() {
-    const {
-      first_name,
-      last_name,
-      phone_number,
-      medication0,
-      medication1,
-      medication2
-    } = this.state;
+    const { first_name, last_name, phone_number } = this.state;
 
     return (
       <Form style={{ padding: "35px" }}>
@@ -145,149 +186,18 @@ class RegistrationForm extends React.Component {
           <i className="fas fa-pills" style={{ paddingRight: "5px" }} />
           Prescriptions
         </h2>
-        <Form.Input
-          fluid
-          label="Medication 1"
-          value={medication0.med_name}
-          name="med_name"
-          onChange={this.onMedication0Change}
-          placeholder="Medication Name"
-          style={{ width: "65%" }}
-        />
-        <Form.Group widths="equal" style={{ width: "50%" }}>
-          <Form.Input
-            fluid
-            label="Dosage"
-            value={medication0.dosage}
-            name="dosage"
-            onChange={this.onMedication0Change}
-            placeholder="Dosage"
-          />
-          <Form.Select
-            fluid
-            label="Unit"
-            value={medication0.dosageUnit}
-            name="dosage_unit"
-            onChange={this.onMedication0Change}
-            options={dosageUnitOptions}
-            placeholder="Unit"
-          />
-        </Form.Group>
-        <Form.Group widths="equal" style={{ width: "50%" }}>
-          <Form.Input
-            fluid
-            label="Frequency"
-            value={medication0.frequency}
-            name="frequency"
-            onChange={this.onMedication0Change}
-            placeholder="Frequency"
-          />
-          <Form.Select
-            fluid
-            label="Time Period"
-            value={medication1.time_period}
-            name="time_period"
-            onChange={this.onMedication0Change}
-            options={periodUnitOptions}
-            placeholder="Time Period"
-          />
-        </Form.Group>
+        {this.createMedicationFormPortion()}
         <br />
-        <Form.Input
-          fluid
-          label="Medication 2"
-          value={medication1.med_name}
-          name="med_name"
-          onChange={this.onMedication1Change}
-          placeholder="Medication Name"
-          style={{ width: "65%" }}
-        />
-        <Form.Group widths="equal" style={{ width: "50%" }}>
-          <Form.Input
-            fluid
-            label="Dosage"
-            value={medication1.dosage}
-            name="dosage"
-            onChange={this.onMedication1Change}
-            placeholder="Dosage"
-          />
-          <Form.Select
-            fluid
-            label="Unit"
-            value={medication1.dosageUnit}
-            name="dosage_unit"
-            onChange={this.onMedication1Change}
-            options={dosageUnitOptions}
-            placeholder="Unit"
-          />
-        </Form.Group>
-        <Form.Group widths="equal" style={{ width: "50%" }}>
-          <Form.Input
-            fluid
-            label="Frequency"
-            value={medication1.frequency}
-            name="frequency"
-            onChange={this.onMedication1Change}
-            placeholder="Frequency"
-          />
-          <Form.Select
-            fluid
-            label="Time Period"
-            value={medication1.time_period}
-            name="time_period"
-            onChange={this.onMedication1Change}
-            options={periodUnitOptions}
-            placeholder="Time Period"
-          />
-        </Form.Group>
-        <Form.Input
-          fluid
-          label="Medication 3"
-          value={medication2.med_name}
-          name="med_name"
-          onChange={this.onMedication2Change}
-          placeholder="Medication Name"
-          style={{ width: "65%" }}
-        />
-        <Form.Group widths="equal" style={{ width: "50%" }}>
-          <Form.Input
-            fluid
-            label="Dosage"
-            value={medication2.dosage}
-            name="dosage"
-            onChange={this.onMedication2Change}
-            placeholder="Dosage"
-          />
-          <Form.Select
-            fluid
-            label="Unit"
-            value={medication2.dosageUnit}
-            name="dosage_unit"
-            onChange={this.onMedication2Change}
-            options={dosageUnitOptions}
-            placeholder="Unit"
-          />
-        </Form.Group>
-        <Form.Group widths="equal" style={{ width: "50%" }}>
-          <Form.Input
-            fluid
-            label="Frequency"
-            value={medication2.frequency}
-            name="frequency"
-            onChange={this.onMedication2Change}
-            placeholder="Frequency"
-          />
-          <Form.Select
-            fluid
-            label="Time Period"
-            value={medication2.time_period}
-            name="time_period"
-            onChange={this.onMedication1Change}
-            options={periodUnitOptions}
-            placeholder="Time Period"
-          />
-        </Form.Group>
-        <Form.Button onClick={this.handleSubmit}>Submit</Form.Button>
+        <hr />
+        <Form.Button value="Add More" onClick={this.handleAddClick.bind(this)}>
+          Add More
+        </Form.Button>
+        <Form.Button
+          onClick={this.handleSubmit}
+          style={{ backgroundColor: "mediumseagreen" }}
+        >
+          Submit
+        </Form.Button>
       </Form>
     );
   }
