@@ -58,19 +58,16 @@ def register_user(request):
         'phone_number': request_data['phone_number'],
         'registration_date': timezone.now()
     }
-
 	# check if patient is present in the database.
-	present_patient = list(Patient.objects.filter(phone_number=patient_data['phone_number']))
-	print(present_patient)
-	if present_patient != None:
- 		patient_instance = Patient.objects.create(first_name=patient_data['first_name'],
+    if Patient.objects.filter(phone_number=patient_data['phone_number']).exists():
+        patient_instance = Patient.objects.create(first_name=patient_data['first_name'],
                                               last_name=patient_data['last_name'],
                                               phone_number=patient_data['phone_number'],
                                               registration_date=patient_data['registration_date'])
-		print("before saving instance")
-		print(patient_instance)
-		patient_instance.save()
-		print("saved instance")
+        print("before saving instance")
+        print(patient_instance)
+        patient_instance.save()
+        print("saved instance")
 
    
     # retrieve the patient.
