@@ -146,7 +146,7 @@ def _create_reminders(patient, medication, medication_id):
 
 @csrf_exempt
 def sms_response(request):
-	request_str = request.body.decode('utf-8')
+	request_str = request.content.decode('utf-8')
 	message = json.loads(request_str)
 	print(message.body)
 	# create client with credentials
