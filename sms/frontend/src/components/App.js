@@ -17,7 +17,11 @@ class App extends React.Component {
 
   renderView = () => {
     if (this.state.view === "home") {
-      return <Home />;
+      return (
+        <center>
+          <Home />
+        </center>
+      );
     } else {
       return <RegistrationForm />;
     }

@@ -147,7 +147,7 @@ class RegistrationForm extends React.Component {
         phone_number: final_phone_number
       })
       .then(result => {
-        alert(result.data.token);
+        alert(result.data.validation_code);
       });
   };
 
