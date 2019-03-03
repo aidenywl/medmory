@@ -19,7 +19,7 @@ HUEY = RedisHuey('sms', connection_pool=pool)
 
 ACCOUNT_SID = 'AC50a4d5175f472777fbdf7769ed686025'
 AUTH_TOKEN = '12b3f169567a82cf006fa7d153b9abdf'
-ACCOUNT_NUMBER='+16106001772'
+ACCOUNT_NUMBER = '+16106001772'
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -40,7 +40,7 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
-	'huey.contrib.djhuey',
+    'huey.contrib.djhuey',
     'sms.apps.SmsConfig',
     'django.contrib.admin',
     'django.contrib.auth',
