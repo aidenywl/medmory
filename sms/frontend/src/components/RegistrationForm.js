@@ -19,7 +19,7 @@ class RegistrationForm extends React.Component {
     this.state = {
       first_name: "Fiona",
       last_name: "Tang",
-      phone_number: "4159198310",
+      phone_number: "+14159198310",
       medications: [
         {
           med_name: "advil",
@@ -133,13 +133,18 @@ class RegistrationForm extends React.Component {
     e.preventDefault();
 
     const { first_name, last_name, phone_number, medications } = this.state;
+    let final_phone_number = phone_number;
+    if (phone_number.charAt(0) !== "+") {
+      final_phone_number = "+1" + phone_number;
+    }
+
     console.log("calling axios");
     axios
       .post("/api/register_user", {
         first_name,
         last_name,
-        phone_number,
-        medications
+        medications,
+        phone_number: final_phone_number
       })
       .then(result => {
         alert(result.data.token);
