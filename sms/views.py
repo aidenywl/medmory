@@ -146,14 +146,14 @@ def _create_reminders(patient, medication, medication_id):
 
 @csrf_exempt
 def sms_response(request):
-	message = request.body
-	print(message)
+	message = json.loads(request.body)
+	print(message.body)
 	# create client with credentials
 	client = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
 	# send message
 	message = client.messages \
         .create(
-            body='message',
+            body=message.body,
             from_=ACCOUNT_NUMBER,
             to='+14159198310'
         )
