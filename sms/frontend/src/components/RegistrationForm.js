@@ -137,12 +137,9 @@ class RegistrationForm extends React.Component {
     if (phone_number.charAt(0) !== "+") {
       final_phone_number = "+1" + phone_number;
     }
-	alert(first_name);
-	alert(last_name);
-	alert(medications);
     console.log("calling axios");
     axios
-      .post("/api/register_user", {
+      .post("http://35.184.73.255/api/register_user", {
         first_name,
         last_name,
         medications,
