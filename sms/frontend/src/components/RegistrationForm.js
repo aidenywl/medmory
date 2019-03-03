@@ -17,9 +17,9 @@ class RegistrationForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      first_name: "",
-      last_name: "",
-      phone_number: "",
+      first_name: "AIDEN",
+      last_name: "LOW",
+      phone_number: "8326204829",
       medications: [
         {
           med_name: "advil",
