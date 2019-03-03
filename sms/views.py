@@ -50,6 +50,7 @@ def register_user(request):
     Request should contain patient and medication information.
     """
     print("HELLO")
+    print(request)
     if request.method != 'POST':
         return HttpResponseServerError('wrong method used.')
     request_data = json.loads(request.body)
@@ -139,8 +140,8 @@ def test_scheduling(request, message):
 
 
 def reminder_message_helper(patient_name, medication_name):
-    message = "Hi {0}! It's time to take your medications. \n{1}\nPlease give me an 'ok' once you've taken your pills!".format(
-        patient_name, medication_name)
+    message = "Hi {0}! It's time to take your medications. \n\n{1}\n\nPlease give me an 'ok' once you've taken your pills!".format(
+        patient_name['first_name'], medication_name)
     return message
 
 
