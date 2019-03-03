@@ -24,7 +24,7 @@ def send_reminder(patient, reminder_id, message):
     send_message(patient['phone_number'], message)
     # schedule check in 5 min
     now = datetime.datetime.now()
-    scheduled_time = now + (datetime.timedelta(seconds=300))
+    scheduled_time = now + (datetime.timedelta(seconds=10))
     check_reminder.schedule(
         args=(patient, reminder_id, message,), eta=scheduled_time)
     return
