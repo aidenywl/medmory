@@ -28,7 +28,6 @@ def send_reminder(patient, reminder, message):
 	check_reminder.schedule(args=(patient, reminder, message,), eta=scheduled_time))
 	return
 
-
 @db_task()
 def check_reminder(patient, reminder, message):
     # print('check reminder: ' + str(datetime.datetime.utcnow()) +

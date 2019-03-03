@@ -1,5 +1,5 @@
 from django.db import models
-from datetime import datetime
+from django.utils import timezone
 from phonenumber_field.modelfields import PhoneNumberField
 
 # Create your models here.
@@ -9,7 +9,8 @@ class Patient(models.Model):
     first_name = models.CharField(max_length=20)
     last_name = models.CharField(max_length=20)
     phone_number = PhoneNumberField(blank=False, null=False)
-    registration_date = models.DateTimeField(default=datetime.now, blank=True)
+    registration_date = models.DateTimeField(
+        default=timezone.now, blank=True)
 
 
 class Medication(models.Model):
