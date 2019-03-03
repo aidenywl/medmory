@@ -174,6 +174,9 @@ def sms_response(request):
 	request_data = request.POST
 	message = request_data['Body']
 	recipient = request_data['To']
+	
+	# set reminder to completed
+	# and response time
 	print(message)
 	# create client with credentials
 	client = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
