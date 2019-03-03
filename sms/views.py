@@ -3,7 +3,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponseServerError, HttpResponse
 from twilio.rest import Client
 from twilio.base.exceptions import TwilioRestException
-from django.conf import settings
+from .credentials import *
 from .tasks import send_reminder, test_task
 from django.utils import timezone
 import datetime
@@ -89,7 +89,7 @@ def register_user(request):
 @csrf_exempt
 def _sms_register(phone_num):
     # create client with credentials
-    client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
+    client = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
     # register user with phone_num
     validation_request = client.validation_requests \
         .create(
@@ -149,12 +149,12 @@ def sms_response(request):
 	# message = json.loads(request.body)
 	# print(message)
 	# create client with credentials
-	client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
+	client = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
 	# send message
 	message = client.messages \
         .create(
             body='testing response',
-            from_=settings.ACCOUNT_NUMBER,
+            from_=ACCOUNT_NUMBER,
             to='+14159198310'
         )
 	return HttpResponse(str(message))

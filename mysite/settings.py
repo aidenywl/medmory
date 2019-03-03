@@ -17,10 +17,6 @@ from redis import ConnectionPool
 pool = ConnectionPool(host='localhost', port=6379, max_connections=20)
 HUEY = RedisHuey('sms', connection_pool=pool)
 
-TWILIO_ACCOUNT_SID = os.environ.get('TWILIO_ACCOUNT_SID', '')
-TWILIO_AUTH_TOKEN  = os.environ.get('TWILIO_AUTH_TOKEN', '')
-ACCOUNT_NUMBER = '+16106001772'
-
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
