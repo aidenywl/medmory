@@ -50,7 +50,7 @@ def register_user(request):
 
     request_data = request.POST
     print(request_data)
-	print(dict(request_data))
+    print(dict(request_data))
 
     patient_data = {
         'first_name': request_data['first_name'],
