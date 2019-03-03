@@ -139,7 +139,7 @@ class RegistrationForm extends React.Component {
     }
     console.log("calling axios", first_name, last_name);
     axios
-      .post("0.0.0.0:80/api/register_user", {
+      .post("/api/register_user", {
         first_name,
         last_name,
         medications,
