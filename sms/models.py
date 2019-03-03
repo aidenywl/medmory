@@ -10,7 +10,7 @@ class Patient(models.Model):
     last_name = models.CharField(max_length=20)
     phone_number = PhoneNumberField(blank=False, null=False)
     registration_date = models.DateTimeField(
-        default=timezone.now, blank=True)
+        default=timezone.now, editable=False)
 
 
 class Medication(models.Model):

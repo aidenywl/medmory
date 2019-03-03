@@ -2,13 +2,14 @@ from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponseServerError, HttpResponse
 from twilio.rest import Client
+from twilio.base.exceptions import TwilioRestException
 from django.conf import settings
 from .tasks import send_reminder, test_task
+from django.utils import timezone
 import datetime
 from .models import *
-
+from twilio.base.exceptions import TwilioRestException
 # Create your views here.
-
 import json
 
 from .forms import PatientForm, MedicationForm
@@ -29,24 +30,31 @@ def register_user(request):
     patient_data = {
         'first_name': request_data['first_name'],
         'last_name': request_data['last_name'],
-        'phone_number': request_data['phone_number']
+        'phone_number': request_data['phone_number'],
+        'registration_date': timezone.now()
     }
 
-    patient_form = PatientForm(patient_data)
-    # If the form is not valid, reject the request.
-    if not patient_form.is_valid():
-        return HttpResponseServerError("Patient data is not valid.")
+    patient_instance = Patient.objects.create(first_name=patient_data['first_name'],
+                                              last_name=patient_data['last_name'],
+                                              phone_number=patient_data['phone_number'],
+                                              registration_date=patient_data['registration_date'])
 
-    patient_form.save()  # save to the database
-
+    print("before saving instance")
+    print(patient_instance)
+    patient_instance.save()
+    print("saved instance")
     # retrieve the patient.
     patient = Patient.objects.filter(
         phone_number=patient_data['phone_number'])[0]
-
+    print(patient)
     # Looping through the medications and saving to the database.
     all_medications = request_data['medications']
     # Register the patient's phone number with twilio
-    _sms_register(patient_data['phone_number'])
+    try:
+        _sms_register(patient_data['phone_number'])
+    except TwilioRestException as err:
+        print(err)
+        pass
 
     print("The prescriptions received are: ", all_medications)
 
@@ -54,14 +62,19 @@ def register_user(request):
         medication_data = {
             'med_name': med['med_name'],
             'dosage': med['dosage'],
-            'unit': med['unit'],
+            'unit': med['dosage_unit'],
             'frequency': med['frequency'],
             'time_period': med['time_period']
         }
-        medication_form = MedicationForm(medication_data)
-        medication_form = medication_form.save(commit=False)
-        medication_form.key_field = patient
-        medication_form.save()
+        med_instance = Medication.objects.create(
+            med_name=medication_data['med_name'],
+            dosage=medication_data['dosage'],
+            unit=medication_data['unit'],
+            frequency=medication_data['frequency'],
+            time_period=medication_data['time_period'],
+            patient_id=patient.id
+        )
+        med_instance.save()
 
         _create_reminders(patient_data, medication_data)
 
