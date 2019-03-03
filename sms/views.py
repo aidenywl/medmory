@@ -19,6 +19,7 @@ import os
 from django.views.generic import View
 from django.conf import settings
 
+
 class FrontendAppView(View):
     """
     Serves the compiled frontend entry point (only works if you have run `yarn
@@ -39,6 +40,7 @@ class FrontendAppView(View):
                 """,
                 status=501,
             )
+
 
 @csrf_exempt
 def register_user(request):
@@ -171,16 +173,16 @@ def _create_reminders(patient, medication, medication_id):
 
 @csrf_exempt
 def sms_response(request):
-	request_str = request.POST
-	message = request_str['Body']
-	print(message)
-	# create client with credentials
-	client = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
-	# send message
-	message = client.messages \
+    request_str = request.POST
+    message = request_str['Body']
+    print(message)
+    # create client with credentials
+    client = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
+    # send message
+    message = client.messages \
         .create(
             body=message,
             from_=ACCOUNT_NUMBER,
             to='+14159198310'
         )
-	return HttpResponse(str(message))
+    return HttpResponse(str(message))
