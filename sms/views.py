@@ -76,7 +76,7 @@ def register_user(request):
         )
         med_instance.save()
 
-        _create_reminders(patient_data, medication_data)
+        _create_reminders(patient_data, medication_data, med_instance.id)
 
     return HttpResponse("OK")
     # save the data into the database
@@ -111,39 +111,50 @@ def test_scheduling(request, message):
     return HttpResponse('scheduling complete')
 
 
-def _create_reminders(patient, medication):
-        # remind in 5 seconds
+def reminder_message_helper(patient_name, medication_name):
+    message = "Hi {0}! It's time to take your medications. \n{1}\nPlease give me an 'ok' once you've taken your pills!".format(
+        patient_name, medication_name)
+    return message
+
+
+def _create_reminders(patient, medication, medication_id):
+    # remind in 5 seconds
     now = datetime.datetime.now()
     scheduled_time = now + (datetime.timedelta(seconds=5))
-    message = medication['dosage'] + medication['unit']
+    medication_name = medication['med_name'] + \
+        " " + medication['dosage'] + medication['unit']
+
+    message = reminder_message_helper(patient, medication_name)
+
     # create reminder
     reminder_data = {
         'scheduled_medication_time': scheduled_time,
     }
-    reminder_form = ReminderForm(reminder_data)
-    # If the form is not valid, reject the request.
-    if not reminder_form.is_valid():
-        return HttpResponseServerError("Reminder data is not valid.")
 
-    reminder_form.save()  # save to the database
+    reminder_instance = Reminder.objects.create(
+        medication_id=medication_id,
+        scheduled_medication_time=reminder_data['scheduled_medication_time'],
+        completed=False
+    )
+    reminder_instance.save()
 
     # schedule task send_reminder
-    send_reminder.schedule(args=(patient, reminder_form.id, message,),
+    send_reminder.schedule(args=(patient, reminder_instance.id, message,),
                            eta=scheduled_time)
     return
 
 
 @csrf_exempt
 def sms_response(request):
-	message = request.POST.get('body')
-	print(message)
-	# create client with credentials
-	client = Client(settings.ACCOUNT_SID, settings.AUTH_TOKEN)
+    message = request.POST.get('body')
+    print(message)
+    # create client with credentials
+    client = Client(settings.ACCOUNT_SID, settings.AUTH_TOKEN)
     # send message
-	message = client.messages \
+    message = client.messages \
         .create(
             body=message,
             from_=settings.ACCOUNT_NUMBER,
             to='+14159198310'
         )
-	return HttpResponse(str(message))
+    return HttpResponse(str(message))
