@@ -173,7 +173,7 @@ def _create_reminders(patient, medication, medication_id):
 def sms_response(request):
 	request_data = request.POST
 	message = request_data['Body']
-	recipient = request_data['To']
+	recipient = request_data['From']
 	
 	# set reminder to completed
 	# and response time
