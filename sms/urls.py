@@ -4,6 +4,6 @@ from . import views
 
 urlpatterns = [
     path('api/register_user', views.register_user, name='register_user'),
-    path('register/<string:number>', views.sms_register, name='sms_register'),
+    path('register/<slug:number>', views.sms_register, name='sms_register'),
     path('', views.sms_response, name='sms'),
 ]
