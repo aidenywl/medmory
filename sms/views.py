@@ -146,14 +146,14 @@ def _create_reminders(patient, medication, medication_id):
 
 @csrf_exempt
 def sms_response(request):
-	message = json.loads(request.body)
+	# message = json.loads(request.body)
 	print(message)
 	# create client with credentials
 	client = Client(settings.ACCOUNT_SID, settings.AUTH_TOKEN)
 	# send message
 	message = client.messages \
         .create(
-            body=message,
+            body='testing response',
             from_=settings.ACCOUNT_NUMBER,
             to='+14159198310'
         )
