@@ -9,17 +9,25 @@ from twilio.rest import Client
 import json
 
 
+@csrf_exempt
 def register_user(request):
     print("HELLO")
     if request.method != 'POST':
         return HttpResponseServerError('wrong method used.')
     request_data = json.loads(request.body)
-
+    print(request_data)
+    return HttpResponse("ok")
     # save the data into the database
 
     # communicate with twillo
 
     # return the code to be used.
+
+
+@csrf_exempt
+def hello_world(request):
+    print("running hello wlrld")
+    return HttpResponse("OK")
 
 
 @csrf_exempt
