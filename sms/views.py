@@ -12,7 +12,7 @@ from twilio.base.exceptions import TwilioRestException
 # Create your views here.
 import json
 
-from .forms import PatientForm, MedicationForm
+from .forms import PatientForm, MedicationForm, ReminderForm
 
 
 @csrf_exempt
@@ -103,7 +103,7 @@ def _sms_register(phone_num):
 def test_scheduling(request, message):
     for x in range(5):
         now = datetime.datetime.now()
-        # remind every 5 mins
+        # remind every 10 seconds
         scheduled_medication_time = now + (datetime.timedelta(seconds=10) * x)
         # schedule task send_reminder
         test_task.schedule(args=(message,),
@@ -112,28 +112,37 @@ def test_scheduling(request, message):
 
 
 def _create_reminders(patient, medication):
-    for x in range(5):
-        now = datetime.datetime.now()
-        # remind every 5 mins
-        scheduled_medication_time = now + (datetime.timedelta(seconds=10) * x)
-        message = medication['dosage'] + medication['unit']
-        # schedule task send_reminder
-        send_reminder.schedule(args=(patient['phone_number'], message,),
-                               eta=scheduled_medication_time)
+        # remind in 5 seconds
+    now = datetime.datetime.now()
+    scheduled_time = now + (datetime.timedelta(seconds=5))
+    message = medication['dosage'] + medication['unit']
+    # create reminder
+    reminder_data = {
+        'scheduled_medication_time': scheduled_time,
+    }
+    reminder_form = ReminderForm(reminder_data)
+    # If the form is not valid, reject the request.
+    if not reminder_form.is_valid():
+        return HttpResponseServerError("Reminder data is not valid.")
+
+    reminder_form.save()  # save to the database
+
+    # schedule task send_reminder
+    send_reminder.schedule(args=(patient, reminder_form.id, message,),
+                           eta=scheduled_time)
     return
 
 
 @csrf_exempt
 def sms_response(request):
-    print(request)
+    message = request.POST.get('body')
     # create client with credentials
     client = Client(settings.ACCOUNT_SID, settings.AUTH_TOKEN)
     # send message
     message = client.messages \
         .create(
-            body="Join Earth's mightiest heroes. Like Kevin Bacon.",
+            body=message,
             from_=settings.ACCOUNT_NUMBER,
-            to='+18326204829'
+            to='+14159198310'
         )
-    print(message)
     return HttpResponse(str(message))

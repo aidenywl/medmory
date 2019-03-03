@@ -26,3 +26,4 @@ class Reminder(models.Model):
     medication = models.ForeignKey(Medication, on_delete=models.DO_NOTHING)
     scheduled_medication_time = models.DateTimeField(blank=False, null=False)
     time_responded = models.DateTimeField(blank=True, null=True)
+    completed = models.BooleanField(default=False)
