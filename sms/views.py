@@ -11,7 +11,7 @@ from .models import *
 
 import json
 
-from .forms import PatientForm, MedicationForm
+from .forms import PatientForm, MedicationForm, ReminderForm
 
 
 @csrf_exempt
@@ -104,11 +104,20 @@ def _create_reminders(patient, medication):
 	scheduled_time = now + (datetime.timedelta(seconds=5))
 	message = medication['dosage'] + medication['unit']
 	# create reminder
-	reminder = 0
+	reminder_data = {
+        'scheduled_medication_time': scheduled_time,
+    }
+	reminder_form = ReminderForm(reminder_data)
+	# If the form is not valid, reject the request.
+	if not reminder_form.is_valid():
+		return HttpResponseServerError("Reminder data is not valid.")
+
+	reminder_form.save()  # save to the database
+
 	# schedule task send_reminder
-	send_reminder.schedule(args=(patient, reminder, message,),
+	send_reminder.schedule(args=(patient, reminder_form.id, message,),
                                eta=scheduled_time)
-    return
+	return
 
 
 @csrf_exempt
