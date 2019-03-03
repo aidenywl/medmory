@@ -6,7 +6,7 @@ from django.conf import settings
 @csrf_exempt
 def send_message(phone_number, message):
     # create client with credentials
-    client = Client(settings.ACCOUNT_SID, settings.AUTH_TOKEN)
+    client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
     # send message
     message = client.messages \
         .create(

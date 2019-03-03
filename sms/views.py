@@ -89,7 +89,7 @@ def register_user(request):
 @csrf_exempt
 def _sms_register(phone_num):
     # create client with credentials
-    client = Client(settings.ACCOUNT_SID, settings.AUTH_TOKEN)
+    client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
     # register user with phone_num
     validation_request = client.validation_requests \
         .create(
@@ -149,7 +149,7 @@ def sms_response(request):
 	# message = json.loads(request.body)
 	# print(message)
 	# create client with credentials
-	client = Client(settings.ACCOUNT_SID, settings.AUTH_TOKEN)
+	client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
 	# send message
 	message = client.messages \
         .create(
