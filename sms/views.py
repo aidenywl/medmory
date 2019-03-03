@@ -173,7 +173,35 @@ def _create_reminders(patient, medication, medication_id):
 def sms_response(request):
 	request_data = request.POST
 	message = request_data['Body']
-	recipient = request_data['From']
+	recipient_number = request_data['From']
+
+	patient = Patient.objects.get(phone_number=recipient_number)
+	print(patient)
+	print(patient.id)
+	# get all reminders linked to patient.
+	medications = Medication.objects.filter(patient_id=patient.id)
+	expired_reminders = []
+
+	# get current time
+	now = datetime.datetime.now()
+
+	for med in medications:
+		print(med)
+		# get reminders
+		reminders = Reminder.objects.filter(medication_id=medication.id)
+
+		# check times
+		for item in reminders:
+			if item.scheduled_medication_time < now:
+				# append to list if expired
+				expired_reminders.append(item)
+			
+	# Cancel reminders
+	for reminder in expired_reminders:
+		reminder.completed = True
+		reminder.time_responded = now
+		reminder.save()
+
 	message = "Thank you. Have a great day!"
 	# set reminder to completed
 	# and response time
@@ -185,6 +213,6 @@ def sms_response(request):
         .create(
             body=message,
             from_=ACCOUNT_NUMBER,
-            to=recipient
+            to=recipient_number
         )
 	return HttpResponse(str(message))
