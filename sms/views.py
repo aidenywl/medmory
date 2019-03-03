@@ -1,10 +1,10 @@
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponseServerError, HttpResponse
-from twilio.twiml.messaging_response import MessagingResponse
 from twilio.rest import Client
 from django.conf import settings
-
+from .tasks import send_reminder, test_task
+import datetime
 # Create your views here.
 
 import json
@@ -27,24 +27,48 @@ def register_user(request):
 
 @csrf_exempt
 def sms_register(request, number):
-	# create client with credentials
-	client = Client(settings.ACCOUNT_SID, settings.AUTH_TOKEN)
-	# register user with number
-	validation_request = client.validation_requests \
+        # create client with credentials
+    client = Client(settings.ACCOUNT_SID, settings.AUTH_TOKEN)
+    # register user with number
+    validation_request = client.validation_requests \
         .create(
             friendly_name=number,
             phone_number='+1' + number
         )
-	print(validation_request.friendly_name)
-	return HttpResponse(str(validation_request.friendly_name))
+    print(validation_request.friendly_name)
+    return HttpResponse(str(validation_request.friendly_name))
+
+
+def test_scheduling(request, message):
+    for x in range(5):
+        now = datetime.datetime.now()
+        # remind every 5 mins
+        scheduled_medication_time = now + (datetime.timedelta(seconds=10) * x)
+        # schedule task send_reminder
+        test_task.schedule(args=(message,),
+                           eta=scheduled_medication_time)
+    return HttpResponse('scheduling complete')
+
+
+
+def _create_reminders(patient, medication):
+    for x in range(5):
+        now = datetime.datetime.now()
+        # remind every 5 mins
+        scheduled_medication_time = now + (datetime.timedelta(seconds=10) * x)
+        message = medication['dosage'] + medication['unit']
+        # schedule task send_reminder
+        send_reminder.schedule(args=(patient['phone_number'], message,),
+                               eta=scheduled_medication_time)
+    return
 
 
 @csrf_exempt
 def sms_response(request):
     print(request)
-	# create client with credentials
+    # create client with credentials
     client = Client(settings.ACCOUNT_SID, settings.AUTH_TOKEN)
-	# send message
+    # send message
     message = client.messages \
         .create(
             body="Join Earth's mightiest heroes. Like Kevin Bacon.",

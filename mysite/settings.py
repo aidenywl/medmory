@@ -11,10 +11,15 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 """
 
 import os
+from huey import RedisHuey
+from redis import ConnectionPool
 
-ACCOUNT_SID = 'AC60be041a5540d6b9083aea07443519d9'
-AUTH_TOKEN = 'ae409c66fcfbfd4c5f6a726b84bb64bf'
-ACCOUNT_NUMBER='+12017545326'
+pool = ConnectionPool(host='localhost', port=6379, max_connections=20)
+HUEY = RedisHuey('my-app', connection_pool=pool)
+
+ACCOUNT_SID = 'AC50a4d5175f472777fbdf7769ed686025'
+AUTH_TOKEN = '12b3f169567a82cf006fa7d153b9abdf'
+ACCOUNT_NUMBER='+16106001772'
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -35,6 +40,7 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
+	'huey.contrib.djhuey',
     'sms.apps.SmsConfig',
     'django.contrib.admin',
     'django.contrib.auth',
