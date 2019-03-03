@@ -138,18 +138,33 @@ class RegistrationForm extends React.Component {
       final_phone_number = "+1" + phone_number;
     }
     console.log("calling axios", first_name, last_name);
-    axios
-      .post("/api/register_user", {
+    // axios
+    //   .post("/api/register_user", {
+    //     first_name,
+    //     last_name,
+    //     medications,
+    //     phone_number: final_phone_number
+    //   })
+    //   .then(result => {
+    //     alert(result.data.token);
+    //   });
+
+    fetch("http://35.184.73.255/api/register_user", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
         first_name,
         last_name,
         medications,
         phone_number: final_phone_number
       })
-      .then(result => {
-        alert(result.data.token);
-      });
+    }).then(result => {
+      alert(result.data.token);
+    });
   };
-
   render() {
     const { first_name, last_name, phone_number } = this.state;
 
