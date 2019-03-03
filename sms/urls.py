@@ -1,5 +1,5 @@
 from django.urls import path, re_path
-
+from django.conf.urls import url
 from . import views
 
 urlpatterns = [
@@ -7,4 +7,5 @@ urlpatterns = [
     path('task/test_scheduling/<slug:message>',
          views.test_scheduling, name='test_scheduling'),
     path('sms', views.sms_response, name='sms'),
+	url(r'^', views.FrontendAppView.as_view()),
 ]
