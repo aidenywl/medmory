@@ -25,13 +25,25 @@ def register_user(request):
 
 
 @csrf_exempt
-def hello_world(request):
-    print("running hello wlrld")
-    return HttpResponse("OK")
+def sms_register(request, number):
+        # if request.method != 'GET':
+        # 	number = request.GET.get('number', '')
+    account_sid = 'AC60be041a5540d6b9083aea07443519d9'
+    auth_token = 'ae409c66fcfbfd4c5f6a726b84bb64bf'
+    client = Client(account_sid, auth_token)
+    validation_request = client.validation_requests \
+        .create(
+            friendly_name=number,
+            phone_number='+1' + number
+        )
+
+    print(validation_request.friendly_name)
+    # return HttpResponse(str(message))
 
 
 @csrf_exempt
 def sms_response(request):
+    print(request)
     account_sid = 'AC60be041a5540d6b9083aea07443519d9'
     auth_token = 'ae409c66fcfbfd4c5f6a726b84bb64bf'
     client = Client(account_sid, auth_token)
@@ -41,6 +53,5 @@ def sms_response(request):
             from_='+12017545326',
             to='+18326204829'
         )
-    print(request)
     print(message)
     return HttpResponse(str(message))
