@@ -119,7 +119,7 @@ def _sms_register(phone_num):
     validation_request = client.validation_requests \
         .create(
             friendly_name=phone_num,
-            phone_number='+1' + phone_num
+            phone_number=phone_num
         )
     print(validation_request.friendly_name)
     return HttpResponse(str(validation_request.friendly_name))
