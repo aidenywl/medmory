@@ -27,7 +27,9 @@ def register_user(request):
 
 @csrf_exempt
 def sms_register(request, number):
+	# create client with credentials
 	client = Client(settings.ACCOUNT_SID, settings.AUTH_TOKEN)
+	# register user with number
 	validation_request = client.validation_requests \
         .create(
             friendly_name=number,
@@ -40,7 +42,9 @@ def sms_register(request, number):
 @csrf_exempt
 def sms_response(request):
     print(request)
+	# create client with credentials
     client = Client(settings.ACCOUNT_SID, settings.AUTH_TOKEN)
+	# send message
     message = client.messages \
         .create(
             body="Join Earth's mightiest heroes. Like Kevin Bacon.",
