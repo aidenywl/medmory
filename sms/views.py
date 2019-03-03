@@ -48,9 +48,8 @@ def register_user(request):
     Request should contain patient and medication information.
     """
     print(request)
-    if request.method != 'POST':
-        return HttpResponseServerError('wrong method used.')
-    request_data = json.loads(request.body)
+
+    request_data = request.POST
 
     patient_data = {
         'first_name': request_data['first_name'],
