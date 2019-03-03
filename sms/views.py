@@ -49,10 +49,11 @@ def register_user(request):
 
     Request should contain patient and medication information.
     """
-    print("HELLO")
-    if request.method != 'POST':
-        return HttpResponseServerError('wrong method used.')
-    request_data = json.loads(request.body)
+    print("the request is: ", request)
+
+    request_data = request.POST
+    print(request_data)
+    print(dict(request_data))
 
     patient_data = {
         'first_name': request_data['first_name'],
@@ -60,16 +61,17 @@ def register_user(request):
         'phone_number': request_data['phone_number'],
         'registration_date': timezone.now()
     }
-
-    patient_instance = Patient.objects.create(first_name=patient_data['first_name'],
+	# check if patient is present in the database.
+    if Patient.objects.filter(phone_number=patient_data['phone_number']).exists():
+        patient_instance = Patient.objects.create(first_name=patient_data['first_name'],
                                               last_name=patient_data['last_name'],
                                               phone_number=patient_data['phone_number'],
                                               registration_date=patient_data['registration_date'])
+        print("before saving instance")
+        print(patient_instance)
+        patient_instance.save()
+        print("saved instance")
 
-    print("before saving instance")
-    print(patient_instance)
-    patient_instance.save()
-    print("saved instance")
     # retrieve the patient.
     patient = Patient.objects.filter(
         phone_number=patient_data['phone_number'])[0]
@@ -173,16 +175,48 @@ def _create_reminders(patient, medication, medication_id):
 
 @csrf_exempt
 def sms_response(request):
-    request_str = request.POST
-    message = request_str['Body']
-    print(message)
-    # create client with credentials
-    client = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
-    # send message
-    message = client.messages \
+	request_data = request.POST
+	message = request_data['Body']
+	recipient_number = request_data['From']
+
+	patient = list(Patient.objects.filter(phone_number=recipient_number))[0]
+	print(patient)
+	print(patient.id)
+	# get all reminders linked to patient.
+	medications = Medication.objects.filter(patient_id=patient.id)
+	expired_reminders = []
+
+	# get current time
+	now = datetime.datetime.now()
+
+	for med in medications:
+		print(med)
+		# get reminders
+		reminders = Reminder.objects.filter(medication_id=medication.id)
+
+		# check times
+		for item in reminders:
+			if item.scheduled_medication_time < now:
+				# append to list if expired
+				expired_reminders.append(item)
+
+	# Cancel reminders
+	for reminder in expired_reminders:
+		reminder.completed = True
+		reminder.time_responded = now
+		reminder.save()
+
+	message = "Thank you. Have a great day!"
+	# set reminder to completed
+	# and response time
+	print(message)
+	# create client with credentials
+	client = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
+	# send message
+	message = client.messages \
         .create(
             body=message,
             from_=ACCOUNT_NUMBER,
-            to='+14159198310'
+            to=recipient_number
         )
     return HttpResponse(str(message))

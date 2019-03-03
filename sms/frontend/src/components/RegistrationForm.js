@@ -17,9 +17,9 @@ class RegistrationForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      first_name: "",
-      last_name: "",
-      phone_number: "",
+      first_name: "AIDEN",
+      last_name: "LOW",
+      phone_number: "8326204829",
       medications: [
         {
           med_name: "advil",
@@ -137,20 +137,34 @@ class RegistrationForm extends React.Component {
     if (phone_number.charAt(0) !== "+") {
       final_phone_number = "+1" + phone_number;
     }
+    console.log("calling axios", first_name, last_name);
+    // axios
+    //   .post("/api/register_user", {
+    //     first_name,
+    //     last_name,
+    //     medications,
+    //     phone_number: final_phone_number
+    //   })
+    //   .then(result => {
+    //     alert(result.data.token);
+    //   });
 
-    console.log("calling axios");
-    axios
-      .post("/api/register_user", {
+    fetch("http://35.184.73.255/api/register_user", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
         first_name,
         last_name,
         medications,
         phone_number: final_phone_number
       })
-      .then(result => {
-        alert(result.data.token);
-      });
+    }).then(result => {
+      alert(result.data.token);
+    });
   };
-
   render() {
     const { first_name, last_name, phone_number } = this.state;
 
