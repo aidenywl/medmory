@@ -19,14 +19,14 @@ class RegistrationForm extends React.Component {
     this.state = {
       first_name: "Fiona",
       last_name: "Tang",
-      phone_number: "+14159198310",
+      phone_number: "4159198310",
       medications: [
         {
           med_name: "advil",
           dosage: "200",
           dosage_unit: "mg",
           frequency: "2",
-          time_period: "weekly"
+          time_period: "daily"
         }
       ]
     };
@@ -39,9 +39,9 @@ class RegistrationForm extends React.Component {
         {
           med_name: "",
           dosage: "",
-          dosage_unit: "",
+          dosage_unit: "mg",
           frequency: "",
-          time_period: "weekly"
+          time_period: "daily"
         }
       ]
     }));
@@ -84,7 +84,7 @@ class RegistrationForm extends React.Component {
           <Form.Select
             fluid
             label="Unit"
-            value={med.dosageUnit}
+            value={med.dosage_unit}
             name="dosage_unit"
             onChange={this.handleChange.bind(this, index)}
             options={dosageUnitOptions}

@@ -23,7 +23,7 @@ def send_reminder(patient, message):
     print('send reminder: ' + str(datetime.datetime.utcnow()) +
           '; ' + patient['phone_number'] + '; ' + message)
     send_message(patient['phone_number'], message)
-	# schedule check
+    # schedule check
     check_reminder.schedule(args=(patient))
     return
 
