@@ -60,7 +60,7 @@ def register_user(request):
     }
 
 	# check if patient is present in the database.
-	present_patient = Patient.objects.filter(phone_number=patient_data['phone_number']).all()
+	present_patient = list(Patient.objects.filter(phone_number=patient_data['phone_number']))
 	print(present_patient)
 	if present_patient != None:
  		patient_instance = Patient.objects.create(first_name=patient_data['first_name'],
