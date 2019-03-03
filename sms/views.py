@@ -23,9 +23,9 @@ def register_user(request):
 
 
 @csrf_exempt
-def sms_register(request):
-	if request.method != 'GET':
-		number = request.GET.get('number', '')
+def sms_register(request, number):
+	# if request.method != 'GET':
+	# 	number = request.GET.get('number', '')
 	account_sid = 'AC60be041a5540d6b9083aea07443519d9'
 	auth_token = 'ae409c66fcfbfd4c5f6a726b84bb64bf'
 	client = Client(account_sid, auth_token)
