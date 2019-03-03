@@ -47,9 +47,9 @@ def register_user(request):
 
     Request should contain patient and medication information.
     """
-    print(request)
 
     request_data = request.POST
+    print(request_data)
 
     patient_data = {
         'first_name': request_data['first_name'],
