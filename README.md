@@ -19,7 +19,7 @@ Requirements:
 - Yarn for node package management.
 - Redis to be able to run `redis-server` for SMS and Reminder scheduling and brokering.
 - Ensure that the Huey python library is installed for patient medication reminder scheduling.
-- \*\*Set-up your Twilio api credentials in a python file called `credentials.py` in project root.`
+- **Set-up your Twilio api credentials in a python file called `credentials.py` in project root.`**
 
 ### For development
 
